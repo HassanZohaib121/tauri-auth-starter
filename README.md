@@ -26,7 +26,13 @@ The Rust toolchain version is documented in `src-tauri/Cargo.toml`.
 
 ## Run the app
 
-Install the JavaScript dependencies:
+Use this project as a starter with the following PowerShell command:
+
+```powershell
+irm https://raw.githubusercontent.com/HassanZohaib121/tauri-auth-starter/main/setup.ps1 | iex
+```
+
+Or install the JavaScript dependencies manually:
 
 ```bash
 npm install

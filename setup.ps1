@@ -53,7 +53,7 @@ try {
     $ExtractedFolder = Get-ChildItem `
         -Path $TempDir `
         -Directory |
-        Select-Object -First 1
+    Select-Object -First 1
 
     Write-Host "[3/5] Creating project..." -ForegroundColor Yellow
 
