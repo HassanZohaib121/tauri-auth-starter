@@ -1,110 +1,60 @@
 param(
-    [string]$ProjectName
+    [string]$ProjectName = "my-tauri-app"
 )
 
 $ErrorActionPreference = "Stop"
 
-$RepoOwner = "HassanZohaib121"
-$RepoName = "tauri-auth-starter"
-$Branch = "main"
+$Repo = "https://github.com/HassanZohaib121/tauri-auth-starter.git"
 
 Write-Host ""
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "       Tauri Authentication Starter" -ForegroundColor Cyan
-Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host "============================================" -ForegroundColor Cyan
+Write-Host "        Tauri Authentication Starter" -ForegroundColor Cyan
+Write-Host "============================================" -ForegroundColor Cyan
 Write-Host ""
-
-if (-not $ProjectName) {
-    $ProjectName = Read-Host "Enter project name"
-}
-
-if ([string]::IsNullOrWhiteSpace($ProjectName)) {
-    Write-Host "Project name is required." -ForegroundColor Red
-    exit 1
-}
 
 if (Test-Path $ProjectName) {
-    Write-Host ""
     Write-Host "Directory '$ProjectName' already exists." -ForegroundColor Red
     exit 1
 }
 
-$TempDir = Join-Path $env:TEMP "tauri-auth-starter-$([guid]::NewGuid())"
-$ZipFile = Join-Path $env:TEMP "tauri-auth-starter.zip"
+Write-Host "[1/7] Creating project..." -ForegroundColor Yellow
+git clone $Repo $ProjectName
 
-try {
+Set-Location $ProjectName
 
-    Write-Host "[1/5] Downloading starter..." -ForegroundColor Yellow
+Write-Host "[2/7] Removing starter Git history..." -ForegroundColor Yellow
+Remove-Item -Recurse -Force .git
 
-    $DownloadUrl = "https://github.com/$RepoOwner/$RepoName/archive/refs/heads/$Branch.zip"
+Write-Host "[3/7] Installing dependencies..." -ForegroundColor Yellow
+npm install
 
-    Invoke-WebRequest `
-        -Uri $DownloadUrl `
-        -OutFile $ZipFile
+Write-Host "[4/7] Initializing Git repository..." -ForegroundColor Yellow
+git init
 
-    Write-Host "[2/5] Extracting starter..." -ForegroundColor Yellow
+Write-Host "[5/7] Creating initial commit..." -ForegroundColor Yellow
+git add .
+git commit -m "Initial project from Tauri Auth Starter"
 
-    New-Item -ItemType Directory -Path $TempDir | Out-Null
+Write-Host "[6/7] Removing setup scripts..." -ForegroundColor Yellow
 
-    Expand-Archive `
-        -Path $ZipFile `
-        -DestinationPath $TempDir
-
-    $ExtractedFolder = Get-ChildItem `
-        -Path $TempDir `
-        -Directory |
-    Select-Object -First 1
-
-    Write-Host "[3/5] Creating project..." -ForegroundColor Yellow
-
-    New-Item `
-        -ItemType Directory `
-        -Path $ProjectName | Out-Null
-
-    Copy-Item `
-        -Path "$($ExtractedFolder.FullName)\*" `
-        -Destination $ProjectName `
-        -Recurse `
-        -Force
-
-    Set-Location $ProjectName
-
-    Write-Host "[4/5] Installing dependencies..." -ForegroundColor Yellow
-
-    npm install
-
-    Write-Host "[5/5] Initializing Git..." -ForegroundColor Yellow
-
-    git init
-
-    git add .
-
-    git commit `
-        -m "Initial project from Tauri Authentication Starter"
-
-    Write-Host ""
-    Write-Host "==========================================" -ForegroundColor Green
-    Write-Host "       Project created successfully!" -ForegroundColor Green
-    Write-Host "==========================================" -ForegroundColor Green
-    Write-Host ""
-
-    Write-Host "Project: $ProjectName"
-    Write-Host ""
-
-    Write-Host "Run:"
-    Write-Host ""
-    Write-Host "  cd $ProjectName" -ForegroundColor Cyan
-    Write-Host "  npm run tauri dev" -ForegroundColor Cyan
-    Write-Host ""
-
+if (Test-Path ".\setup.ps1") {
+    Remove-Item ".\setup.ps1" -Force
 }
-finally {
 
-    if (Test-Path $ZipFile) {
-        Remove-Item $ZipFile -Force
-    }
-
-    if (Test-Path $TempDir) {
-        Remove-Item $TempDir -Recurse -Force
-    }
+if (Test-Path ".\setup.sh") {
+    Remove-Item ".\setup.sh" -Force
 }
+
+Write-Host "[7/7] Done!" -ForegroundColor Green
+Write-Host ""
+Write-Host "============================================" -ForegroundColor Green
+Write-Host "       Project created successfully!" -ForegroundColor Green
+Write-Host "============================================" -ForegroundColor Green
+Write-Host ""
+Write-Host "Project: $ProjectName"
+Write-Host ""
+Write-Host "Run:"
+Write-Host ""
+Write-Host "  cd $ProjectName" -ForegroundColor Cyan
+Write-Host "  npm run tauri dev" -ForegroundColor Cyan
+Write-Host ""
