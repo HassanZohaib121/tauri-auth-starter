@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "authentication-app",
+  "productName": "tauri-auth-starter",
   "version": "0.1.0",
-  "identifier": "com.authentication.app",
+  "identifier": "com.tauri-auth-starter",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Authentication App",
+        "title": "tauri-auth-starter",
         "width": 800,
         "height": 600,
         "resizable": true,

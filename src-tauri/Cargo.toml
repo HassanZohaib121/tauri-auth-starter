@@ -1,8 +1,8 @@
 [package]
 name = "app"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "tauri-auth-starter"
+authors = ["Hassan Zohaib"]
 license = ""
 repository = ""
 edition = "2021"
